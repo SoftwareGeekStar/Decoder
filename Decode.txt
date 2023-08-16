@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace decoder
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            byte[] _rawPacket = new byte[223];
+            //seqnum = 512;
+            _rawPacket[0] = 0b11111111;
+            _rawPacket[1] = 0b00000001;
+            Console.WriteLine(ExtractKeyValues(0, 16, "seqId", "int")); ExtractKeyValues(0, 16, "seqId", "int");
+
+
+            //Parameter[] _allParams;
+            //int _startIndex = 0;
+
+            //_rawPacket = ReceiveFromQueue();
+            //_allParams = Decode(_rawPacket);
+            //DeliverToQueue(_allParams);
+
+            byte a = 1;
+            byte mask = (byte)((1 << 4) - 1);
+            Console.WriteLine(mask);
+            byte extractedBits = (byte)((a >> 1) & mask);
+            Console.WriteLine(a);
+            Console.WriteLine(extractedBits);
+            Console.ReadKey();
+        }
+
+        //private static Parameter[] Decode(byte[] rawPacket)
+        //{
+        //    for (int i = _startIndex; i < length; i++)
+        //    {
+
+        //    }
+        //}
+
+        private static Parameter ExtractKeyValues(int startbit, int length, string paramName, string keyType)
+        {
+            Parameter param = new Parameter();
+            param.name = paramName;
+
+
+
+            switch (keyType)
+            {
+                case "int":
+
+                    param.value = BitConverter.ToInt32(binaryData, 0); // Output: 16909060
+                    param.Type = "int";
+                    break;
+                case "float":
+                    param.value = BitConverter.ToSingle(binaryData, 0);// Output: 2.387939E-29
+                    param.Type = "float";
+                    break;
+                case "string":
+                    param.value = System.Text.Encoding.ASCII.GetString(binaryData); // Output: "☺☻♥♦"
+                    param.Type = "string";
+                    break;
+                case "boolean":
+                    param.value = BitConverter.ToBoolean(new byte[] { 0x01 }, 0); // Output: True
+                    param.Type = "bool";
+                    break;
+                default:
+                    break;
+            }
+            return param;
+        }
+
+        public class Parameter
+        {
+            public string name;
+            public string value;
+            public string Type;
+        }
+
+    }
+}
